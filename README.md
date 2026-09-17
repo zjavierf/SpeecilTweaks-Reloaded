@@ -39,5 +39,5 @@ Press the **Speecil Tweaks** button in the main menu to open the fully interacti
 
 ## Credits & Links
 * Built and maintained by **zjavierf**.
-* Forked from Speecil
+* Forked from [Speecil](https://github.com/speecil/SpeecilTweaks-PC) 
 * Features inspired from other mods
