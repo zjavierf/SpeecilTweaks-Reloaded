@@ -35,7 +35,7 @@ Press the **Speecil Tweaks** button in the main menu to open the fully interacti
 1. **Menu Tweaks** (Main Menu, Song List Screen, Results Screen)
 2. **Gameplay / Performance** (All optimization toggles)
 3. **Quality Of Life** (Custom Color Presets manager and modal editor)
-4. **Other Mods** (Quick links to my other mods *FCSplash* and *WeatherModReloaded*)
+4. **Other Mods** (Quick links to my other mods [*FCSplash*](https://github.com/unknownjwly/BS_FCSplash) and [*WeatherModReloaded*](https://github.com/zjavierf/Beat-Saber-WeatherReloaded))
 
 ## Credits & Links
 * Built and maintained by **zjavierf**.
