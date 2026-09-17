@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- This file contains project properties used by the build. -->
 <Project>
 
@@ -7,12 +7,12 @@
     <PluginId>SpeecilTweaks</PluginId>
     <PluginName>SpeecilTweaks</PluginName>
     <Authors>zjavierf</Authors>
-    <Version>0.0.1</Version>
+    <Version>0.1.0</Version>
     <GameVersion>1.40.8</GameVersion>
-    <Description>Tweaks for Beat Saber</Description>
+    <Description>General Tweaks for Beat Saber</Description>
     <!--<PluginIcon></PluginIcon>-->
-    <!--<ProjectSource></ProjectSource>-->
-    <!--<ProjectHome></ProjectHome>-->
+    <!--<ProjectSource>https://github.com/zjavierf/SpeecilTweaks-Reloaded</ProjectSource>-->
+    <!--<ProjectHome>https://github.com/zjavierf/SpeecilTweaks-Reloaded</ProjectHome>-->
     <!--<DonateUrl></DonateUrl>-->
   </PropertyGroup>
 
