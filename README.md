@@ -3,12 +3,12 @@
 An expanded set of tweaks and customisations for **Beat Saber**.
 
 ---
-## Screenshots
+##  Screenshots
 
 <details>
 <summary><b>Click to expand and view the gallery</b></summary>
 
-### 🎨 Main Menu & Customization
+### Main Menu & Customization
 
 **Custom Logo & Main Menu**
 <img width="800" alt="mainLogo" src="https://github.com/user-attachments/assets/e4b18143-3fd7-47c3-8029-9cc67ae9a907" />
@@ -30,7 +30,7 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 
 ---
 
-### 🎨 Color Preset Manager
+### Color Preset Manager
 
 **Color Preset Overview**
 <img width="800" alt="colorPresetTab" src="https://github.com/user-attachments/assets/b46f087d-418a-4082-814a-5cf5c9db2623" />
@@ -46,7 +46,7 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 
 ---
 
-### ⚡ Performance & Settings Tabs
+### Performance & Settings Tabs
 
 **Performance Tab 1**
 <img width="800" alt="performanceTab" src="https://github.com/user-attachments/assets/684a67e7-319c-49c9-8a39-c2f387e65cc8" />
@@ -57,10 +57,15 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 **Results Screen Tab**
 <img width="800" alt="resultsScreenTab" src="https://github.com/user-attachments/assets/0c8b1d97-f055-4105-8266-02640a0d4efd" />
 
+**Other Mods Tab**
+<img width="800" alt="otherModsTab" src="https://github.com/user-attachments/assets/a03039d0-afe8-4b66-a81a-ee97d4a5c822" />
+
+</details>
+
 ---
 ## Features
 
-### 🎨 Menu Tweaks
+### Menu Tweaks
 * **Main Menu Customisation**:
   * Customize or rename the Main Menu **Solo**, **Play**, and **Practice** button text.
   * Adjust custom text colors for buttons.
@@ -71,7 +76,7 @@ An expanded set of tweaks and customisations for **Beat Saber**.
   * Change pass and fail result text.
   * Customize pass and fail banner background colors.
 
-### ⚡ Performance Optimizations
+### Performance Optimizations
 * **GC Control**: Temporarily disables automatic garbage collection during songs to prevent micro-stutters, with safety cleanup thresholds (>250MB).
 * **Fast Obstacle Optimization**: Dynamic head-wall collision detector to optimize performance on wall-heavy map streams.
 * **Automatic Asset Purge**: Automatically triggers garbage collection and unloads unused assets during menu loading transitions.
@@ -80,7 +85,7 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 * **Audio Buffer Size Optimization**: Lowers the DSP buffer size (512) to minimize audio-to-motion latency.
 * **High Process Priority**: Option to force Beat Saber's CPU process priority to High.
 
-### 🛠️ Quality Of Life & Color Presets
+### Quality Of Life & Color Presets
 * **Custom Color Preset Manager**: 
   * Create, edit, save, and delete custom color presets directly inside the in-game UI.
   * Fully configure custom hex values for **Left Saber**, **Right Saber**, **Environment Left/Right**, and **Obstacles**.
@@ -97,10 +102,3 @@ Press the **Speecil Tweaks** button in the main menu to open the fully interacti
 * Built and maintained by **zjavierf**.
 * Forked from [Speecil](https://github.com/speecil/SpeecilTweaks-PC) 
 * Features inspired from other mods
-
----
-
-**Other Mods Tab**
-<img width="800" alt="otherModsTab" src="https://github.com/user-attachments/assets/a03039d0-afe8-4b66-a81a-ee97d4a5c822" />
-
-</details>
