@@ -1,0 +1,167 @@
+﻿<bg anchor-pos-y="-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd">
+
+	<!-- Custom Title -->
+	<horizontal anchor-pos-x="-5" anchor-pos-y="50" vertical-fit="PreferredSize" horizontal-fit="PreferredSize" spacing="4" bg="round-rect-panel" bg-alpha="0.8" pref-height="10" pref-width="50">
+		<text text="Speecil Tweaks" font-color="orange" font-size="7" align="Center"/>
+	</horizontal>
+
+	<!-- Exit Button -->
+	<clickable-image src="SpeecilTweaks.Resources.exitIcon.png" on-click="BackButton" hover-hint="Exit" highlight-color="red" scale="0.5" anchor-pos-y="50" anchor-pos-x="-38"/>
+
+	<!-- Github Button -->
+	<clickable-image src="SpeecilTweaks.Resources.githubIcon.png" on-click="Github" hover-hint="Open Github Link" highlight-color="cyan" scale="0.5" anchor-pos-y="50" anchor-pos-x="30"/>
+
+	<!-- Top-level Tab Bar background panel -->
+	<horizontal anchor-pos-y="2" ignore-layout="true" pivot-y="1" vertical-fit="PreferredSize" horizontal-fit="PreferredSize" bg="panel-top" bg-color="#3F3F3F" pref-height="12" pref-width="110">
+		<text text=" "/>
+	</horizontal>
+
+	<tab-selector tab-tag="tabs" anchor-pos-y="0"/>
+
+	<horizontal preferred-width="110" preferred-height="62" anchor-pos-y="-3">
+
+		<!-- Tab 1: Menu Tweaks -->
+		<tab tab-name="Menu Tweaks" tags="tabs">
+			<tab-selector tab-tag="tabs1"/>
+			<horizontal preferred-width="110" preferred-height="55" anchor-pos-y="-3">
+
+				<tab tab-name="Main Menu" tags="tabs1">
+					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
+						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
+							<string-setting value="solo-text" text="Main Menu Solo Text" apply-on-change="true"/>
+							<color-setting value="solo-button-colour" text="Solo Button Text Colour" apply-on-change="true"/>
+							<toggle-setting text="Hide Menu Sky Logo" value="hide-menu-logo" hover-hint="Hide the floating Logo" apply-on-change="true"/>
+							<horizontal><text text=" " font-size="2" color="#00000000"/></horizontal>
+							<horizontal><text text=" " font-size="2" color="#00000000"/></horizontal>
+							<toggle-setting text="Enable Custom Logo Text" value="enable-custom-logo" apply-on-change="true"/>
+							<string-setting text="Custom Logo Text" value="custom-logo-text" hover-hint="Replace Logo Text" apply-on-change="true"/>
+							<color-setting value="custom-logo-colour" text="Custom Logo Text Colour" apply-on-change="true"/>
+						</scroll-view>
+					</vertical>
+				</tab>
+
+				<tab tab-name="Song List Screen" tags="tabs1">
+					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
+						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
+							<string-setting value="play-text" text="Play Button Text" apply-on-change="true"/>
+							<string-setting value="practice-text" text="Practice Button Text" apply-on-change="true"/>
+							<color-setting value="play-button-colour" text="Play Button Text Colour" apply-on-change="true"/>
+							<color-setting value="practice-button-colour" text="Practice Button Text Colour" apply-on-change="true"/>
+						</scroll-view>
+					</vertical>
+				</tab>
+
+				<tab tab-name="Results Screen" tags="tabs1">
+					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
+						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
+							<string-setting value="result-text" text="Pass Result Text" apply-on-change="true" hover-hint="What the text on the result screen is when you pass a map"/>
+							<string-setting value="result-fail-text" text="Fail Result Text" apply-on-change="true" hover-hint="What the text on the result screen is when you fail a map"/>
+							<color-setting value="pass-bg-colour" text="Pass Background Colour" apply-on-change="true" hover-hint="What the colour on the result screen is when you pass a map"/>
+							<color-setting value="fail-bg-colour" text="Fail Background Colour" apply-on-change="true" hover-hint="What the colour on the result screen is when you fail a map"/>
+						</scroll-view>
+					</vertical>
+				</tab>
+			</horizontal>
+		</tab>
+
+		<!-- Tab 2: Gameplay -->
+		<tab tab-name="Gameplay" tags="tabs">
+			<tab-selector tab-tag="tabs2"/>
+			<horizontal preferred-width="110" preferred-height="55" anchor-pos-y="-3">
+				
+				<tab tab-name="Performance" tags="tabs2">
+					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
+						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
+							<toggle-setting value="enable-gc-control" apply-on-change="true" text="GC Optimizations" hover-hint="Temporarily disable automatic garbage collection during songs to prevent micro-stutters"/>
+							<toggle-setting value="enable-obstacle-opt" apply-on-change="true" text="Fast Obstacle Collision" hover-hint="Optimizes head wall-collision on wall heavy maps."/>
+							<toggle-setting value="enable-asset-purge" apply-on-change="true" text="Automatic Asset Purge" hover-hint="Automatically trigger asset garbage collection during initial menu loading transitions"/>
+							<toggle-setting value="enable-physics-opt" apply-on-change="true" text="Physics Optimization" hover-hint="Adjust fixedDeltaTime to optimize physics during dense note streams"/>
+							<toggle-setting value="enable-texture-opt" apply-on-change="true" text="Texture Mipmap Optimization" hover-hint="Force texture mipmap limits to reduce VRAM usage"/>
+							<toggle-setting value="enable-audio-opt" apply-on-change="true" text="Audio Buffer Size Optimization" hover-hint="Reduce the DSP buffer size to reduce audio-to-motion latency"/>
+							<toggle-setting value="enable-high-priority" apply-on-change="true" text="Process Priority High" hover-hint="Set Beat Saber CPU priority to High"/>
+						</scroll-view>
+					</vertical>
+				</tab>
+			</horizontal>
+		</tab>
+
+		<!-- Tab 3: Quality Of Life -->
+		<tab tab-name="Quality Of Life" tags="tabs">
+			<tab-selector tab-tag="tabs3" size-delta-x="5"/>
+			<horizontal preferred-width="110" preferred-height="55" anchor-pos-y="-3">
+
+				<tab tab-name="Color Presets" tags="tabs3">
+					<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" preferred-width="60" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="3" spacing="2">
+						<action-button text="+ Create New Preset" on-click="open-create-preset-modal"/>
+						<text text="Saved Custom Presets" align="Center" font-size="4" bold="true"/>
+
+						<!-- Custom List corrected to use 'contents' -->
+						<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" pref-height="35" pref-width="50">
+							<custom-list id="presets-list" contents="preset-list-data" list-height="7.5" list-width="95">
+								<horizontal horizontal-fit="Unconstrained" vertical-fit="Unconstrained" pad-left="2" pad-right="2">
+									<vertical child-align="MiddleCenter" horizontal-fit="Unconstrained">
+										<text text="~preset-title" font-size="4" bold="true" align="Left"/>
+										<text text="Custom Color Preset" font-size="2.5" color="#888888" align="Left"/>
+										<text text="_________________________________________________________________________________________________" font-size="2.5" color="#888888" align="Left"/>
+									</vertical>
+									<clickable-image src="SpeecilTweaks.Resources.editIcon.png" on-click="edit-clicked" pivot-x="1.3" preserve-aspect="true" scale="0.6" hover-hint="Edit Preset" highlight-color="yellow"/>
+									<clickable-image src="SpeecilTweaks.Resources.deleteIcon.png" on-click="delete-clicked" pivot-x="1.3" preserve-aspect="true" scale="0.6" hover-hint="Delete Preset" highlight-color="red"/>
+								</horizontal>
+							</custom-list>
+						</vertical>
+					</vertical>
+				</tab>
+			</horizontal>
+		</tab>
+		<!-- Tab 4: Other Mods -->
+		<tab tab-name="Other Mods" tags="tabs">
+			<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="4" child-align="MiddleCenter" spacing="3">
+				<text color="aqua" text="FCSplash Mod" font-align="Center" font-size="7"/>
+				<action-button on-click="FCSplashRepo" text="Link to FCSplash Mod"/>
+				<text color="aqua" text="WeatherModReloaded" font-align="Center" font-size="7"/>
+				<action-button on-click="WeatherModRepo" text="Link to WeatherModReloaded"/>
+				<text text="Message zjavierf on discord for any feature requests or bugs!" outline-color="black" outline-width="3" font-size="3" align="Center" word-wrapping="true"/>
+			</vertical>
+		</tab>
+
+	</horizontal>
+
+	<!-- Create Preset Modal Popup -->
+	<modal show-event="show-create-modal" hide-event="hide-create-modal" size-delta-x="110" size-delta-y="75">
+		<vertical pad="4" spacing="1">
+			<text text="Create Custom Color Preset" align="Center" font-size="5" bold="true"/>
+
+			<string-setting text="Preset Name" value="new-preset-name" apply-on-change="true"/>
+			<color-setting text="Left Saber" value="new-saber-left" apply-on-change="true"/>
+			<color-setting text="Right Saber" value="new-saber-right" apply-on-change="true"/>
+			<color-setting text="Environment Left" value="new-env-left" apply-on-change="true"/>
+			<color-setting text="Environment Right" value="new-env-right" apply-on-change="true"/>
+			<color-setting text="Obstacle" value="new-obstacle" apply-on-change="true"/>
+
+			<horizontal spacing="4" pad-top="2">
+				<action-button text="Save Preset" on-click="save-new-preset"/>
+				<action-button text="Cancel" on-click="cancel-create-preset"/>
+			</horizontal>
+		</vertical>
+	</modal>
+
+	<!-- Edit Preset Modal Popup -->
+	<modal id="preset-settings-modal" show-event="show-edit-modal" hide-event="hide-edit-modal" size-delta-x="110" size-delta-y="75">
+		<vertical pad="4" spacing="1">
+			<text text="Edit Custom Color Preset" align="Center" font-size="5" bold="true"/>
+
+			<string-setting id="preset-settings-name" text="Preset Name" apply-on-change="false"/>
+			<color-setting id="preset-settings-saber-left" text="Left Saber" apply-on-change="false"/>
+			<color-setting id="preset-settings-saber-right" text="Right Saber" apply-on-change="false"/>
+			<color-setting id="preset-settings-env-left" text="Environment Left" apply-on-change="false"/>
+			<color-setting id="preset-settings-env-right" text="Environment Right" apply-on-change="false"/>
+			<color-setting id="preset-settings-obstacle" text="Obstacle" apply-on-change="false"/>
+
+			<horizontal spacing="4" pad-top="2">
+				<action-button text="Save Changes" on-click="save-edited-preset"/>
+				<action-button text="Cancel" on-click="cancel-edit-preset"/>
+			</horizontal>
+		</vertical>
+	</modal>
+
+</bg>
