@@ -102,3 +102,4 @@ Press the **Speecil Tweaks** button in the main menu to open the fully interacti
 * Built and maintained by **zjavierf**.
 * Forked from [Speecil](https://github.com/speecil/SpeecilTweaks-PC) 
 * Features inspired from other mods
+* DM `zjavierf` on discord for feature requests, bugs or questions!
