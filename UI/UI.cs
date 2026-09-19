@@ -1,4 +1,4 @@
-﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.Parser;
@@ -197,30 +197,6 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Performance.EnableTextureOptimization = value;
                 QualitySettings.globalTextureMipmapLimit = value ? 1 : 0;
                 Plugin.Log?.Info($"[TextureOptimizer] Mipmap limit updated. Enabled: {value}");
-            }
-        }
-    }
-
-    [UIValue("enable-audio-opt")]
-    public bool EnableAudioOpt
-    {
-        get => PluginConfig.Instance?.Performance?.EnableAudioOptimization ?? false;
-        set
-        {
-            if (PluginConfig.Instance?.Performance != null)
-            {
-                PluginConfig.Instance.Performance.EnableAudioOptimization = value;
-                if (value)
-                {
-                    SpeecilTweaks.Features.Performance.SpeecilPerformanceManager.ApplyAudioOptimization(value);
-                }
-                else
-                {
-                    var config = AudioSettings.GetConfiguration();
-                    config.dspBufferSize = 1024;
-                    AudioSettings.Reset(config);
-                    Plugin.Log?.Info("[AudioOptimizer] Audio optimizations disabled, reset to default buffer size (1024).");
-                }
             }
         }
     }
