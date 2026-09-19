@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using IPA.Config.Stores;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
@@ -62,7 +62,6 @@ namespace SpeecilTweaks.Configuration
             public virtual bool EnableAssetPurge { get; set; } = false;
             public virtual bool EnablePhysicsOptimization { get; set; } = false;
             public virtual bool EnableTextureOptimization { get; set; } = false;
-            public virtual bool EnableAudioOptimization { get; set; } = false;
             public virtual bool EnableHighPriority { get; set; } = false;
         }
 
