@@ -82,7 +82,6 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 * **Automatic Asset Purge**: Automatically triggers garbage collection and unloads unused assets during menu loading transitions.
 * **Physics Optimization**: Adjusts `fixedDeltaTime` dynamically based on your display refresh rate (FPFC) or headset refresh rate.
 * **Texture Mipmap Optimization**: Forces texture mipmap limits to reduce VRAM consumption.
-* **Audio Buffer Size Optimization**: Lowers the DSP buffer size (512) to minimize audio-to-motion latency.
 * **High Process Priority**: Option to force Beat Saber's CPU process priority to High.
 
 ### Quality Of Life & Color Presets
