@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,7 +36,6 @@ namespace SpeecilTweaks.Features.Performance
             Init();
 
             ApplyPhysicsOptimization(config.EnablePhysicsOptimization);
-            ApplyAudioOptimization(config.EnableAudioOptimization);
             ApplyTextureOptimization(config.EnableTextureOptimization);
             ApplyHighPriority(config.EnableHighPriority);
         }
@@ -92,21 +91,6 @@ namespace SpeecilTweaks.Features.Performance
             {
                 Time.fixedDeltaTime = 0.02f;
                 Plugin.Log?.Info("[PerformanceManager] Physics optimization disabled (fixedDeltaTime reset to 0.02).");
-            }
-        }
-
-        public static void ApplyAudioOptimization(bool enable)
-        {
-            try
-            {
-                AudioConfiguration audioConfig = AudioSettings.GetConfiguration();
-                audioConfig.dspBufferSize = enable ? 512 : 1024;
-                AudioSettings.Reset(audioConfig);
-                Plugin.Log?.Info($"[PerformanceManager] Audio DSP buffer size set to {(enable ? 512 : 1024)}.");
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log?.Error($"[PerformanceManager] Failed to configure audio: {ex.Message}");
             }
         }
 
