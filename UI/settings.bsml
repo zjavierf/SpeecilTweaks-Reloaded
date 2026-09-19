@@ -1,4 +1,4 @@
-﻿<bg anchor-pos-y="-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd">
+<bg anchor-pos-y="-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd">
 
 	<!-- Custom Title -->
 	<horizontal anchor-pos-x="-5" anchor-pos-y="50" vertical-fit="PreferredSize" horizontal-fit="PreferredSize" spacing="4" bg="round-rect-panel" bg-alpha="0.8" pref-height="10" pref-width="50">
@@ -77,7 +77,6 @@
 							<toggle-setting value="enable-asset-purge" apply-on-change="true" text="Automatic Asset Purge" hover-hint="Automatically trigger asset garbage collection during initial menu loading transitions"/>
 							<toggle-setting value="enable-physics-opt" apply-on-change="true" text="Physics Optimization" hover-hint="Adjust fixedDeltaTime to optimize physics during dense note streams"/>
 							<toggle-setting value="enable-texture-opt" apply-on-change="true" text="Texture Mipmap Optimization" hover-hint="Force texture mipmap limits to reduce VRAM usage"/>
-							<toggle-setting value="enable-audio-opt" apply-on-change="true" text="Audio Buffer Size Optimization" hover-hint="Reduce the DSP buffer size to reduce audio-to-motion latency"/>
 							<toggle-setting value="enable-high-priority" apply-on-change="true" text="Process Priority High" hover-hint="Set Beat Saber CPU priority to High"/>
 						</scroll-view>
 					</vertical>
