@@ -72,8 +72,6 @@
 				<tab tab-name="Performance" tags="tabs2">
 					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
 						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
-							<toggle-setting value="enable-gc-control" apply-on-change="true" text="GC Optimizations" hover-hint="Temporarily disable automatic garbage collection during songs to prevent micro-stutters"/>
-							<toggle-setting value="enable-obstacle-opt" apply-on-change="true" text="Fast Obstacle Collision" hover-hint="Optimizes head wall-collision on wall heavy maps."/>
 							<toggle-setting value="enable-asset-purge" apply-on-change="true" text="Automatic Asset Purge" hover-hint="Automatically trigger asset garbage collection during initial menu loading transitions"/>
 							<toggle-setting value="enable-physics-opt" apply-on-change="true" text="Physics Optimization" hover-hint="Adjust fixedDeltaTime to optimize physics during dense note streams"/>
 							<toggle-setting value="enable-texture-opt" apply-on-change="true" text="Texture Mipmap Optimization" hover-hint="Force texture mipmap limits to reduce VRAM usage"/>
