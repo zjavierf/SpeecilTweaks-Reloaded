@@ -48,39 +48,45 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
 
     private string _editingPresetOriginalName = string.Empty;
 
+    // Helper method to keep things DRY and instant
+    private void SaveAndFlush()
+    {
+        Plugin.SaveConfig();
+    }
+
     [UIValue("play-text")]
     public string PlayText
     {
         get => PluginConfig.Instance?.Text?.PlayText ?? "";
-        set { if (PluginConfig.Instance?.Text != null) PluginConfig.Instance.Text.PlayText = value; }
+        set { if (PluginConfig.Instance?.Text != null) { PluginConfig.Instance.Text.PlayText = value; SaveAndFlush(); } }
     }
 
     [UIValue("practice-text")]
     public string PracticeText
     {
         get => PluginConfig.Instance?.Text?.PracticeText ?? "";
-        set { if (PluginConfig.Instance?.Text != null) PluginConfig.Instance.Text.PracticeText = value; }
+        set { if (PluginConfig.Instance?.Text != null) { PluginConfig.Instance.Text.PracticeText = value; SaveAndFlush(); } }
     }
 
     [UIValue("result-text")]
     public string ResultText
     {
         get => PluginConfig.Instance?.Text?.ResultText ?? "";
-        set { if (PluginConfig.Instance?.Text != null) PluginConfig.Instance.Text.ResultText = value; }
+        set { if (PluginConfig.Instance?.Text != null) { PluginConfig.Instance.Text.ResultText = value; SaveAndFlush(); } }
     }
 
     [UIValue("result-fail-text")]
     public string ResultFailText
     {
         get => PluginConfig.Instance?.Text?.ResultFailText ?? "";
-        set { if (PluginConfig.Instance?.Text != null) PluginConfig.Instance.Text.ResultFailText = value; }
+        set { if (PluginConfig.Instance?.Text != null) { PluginConfig.Instance.Text.ResultFailText = value; SaveAndFlush(); } }
     }
     
     [UIValue("solo-text")]
     public string SoloText
     {
         get => PluginConfig.Instance?.Text?.SoloText ?? "";
-        set { if (PluginConfig.Instance?.Text != null) PluginConfig.Instance.Text.SoloText = value; }
+        set { if (PluginConfig.Instance?.Text != null) { PluginConfig.Instance.Text.SoloText = value; SaveAndFlush(); } }
     }
 
     [UIValue("hide-menu-logo")]
@@ -93,6 +99,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             {
                 PluginConfig.Instance.Text.HideMenuLogo = value;
                 Features.MenuTweaks.MenuLogoTweaks.ApplyLogoTweaks();
+                SaveAndFlush();
             }
         }
     }
@@ -107,6 +114,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             {
                 PluginConfig.Instance.Text.EnableCustomMenuLogoText = value;
                 Features.MenuTweaks.MenuLogoTweaks.ApplyLogoTweaks();
+                SaveAndFlush();
             }
         }
     }
@@ -121,6 +129,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             {
                 PluginConfig.Instance.Text.CustomMenuLogoText = value;
                 Features.MenuTweaks.MenuLogoTweaks.ApplyLogoTweaks();
+                SaveAndFlush();
             }
         }
     }
@@ -139,31 +148,18 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.CustomLogoColorG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.CustomLogoColorB = (int)(value.b * 255f);
                 Features.MenuTweaks.MenuLogoTweaks.ApplyLogoTweaks();
+                SaveAndFlush();
             }
         }
     }
-
-    [UIValue("enable-gc-control")]
-    public bool EnableGcControl
-    {
-        get => PluginConfig.Instance?.Performance?.EnableGarbageCollectionControl ?? false;
-        set { if (PluginConfig.Instance?.Performance != null) PluginConfig.Instance.Performance.EnableGarbageCollectionControl = value; }
-    }
-
+    
     [UIValue("enable-asset-purge")]
     public bool EnableAssetPurge
     {
         get => PluginConfig.Instance?.Performance?.EnableAssetPurge ?? false;
-        set { if (PluginConfig.Instance?.Performance != null) PluginConfig.Instance.Performance.EnableAssetPurge = value; }
+        set { if (PluginConfig.Instance?.Performance != null) { PluginConfig.Instance.Performance.EnableAssetPurge = value; SaveAndFlush(); } }
     }
     
-    [UIValue("enable-obstacle-opt")]
-    public bool EnableObstacleOpt
-    {
-        get => PluginConfig.Instance?.Performance?.EnableObstacleOptimization ?? false;
-        set { if (PluginConfig.Instance?.Performance != null) PluginConfig.Instance.Performance.EnableObstacleOptimization = value; }
-    }
-
     [UIValue("enable-physics-opt")]
     public bool EnablePhysicsOpt
     {
@@ -182,6 +178,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                     Time.fixedDeltaTime = 0.02f;
                     Plugin.Log?.Info("[PhysicsOptimizer] Physics optimizations disabled, reset fixedDeltaTime to default (0.02).");
                 }
+                SaveAndFlush();
             }
         }
     }
@@ -197,6 +194,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Performance.EnableTextureOptimization = value;
                 QualitySettings.globalTextureMipmapLimit = value ? 1 : 0;
                 Plugin.Log?.Info($"[TextureOptimizer] Mipmap limit updated. Enabled: {value}");
+                SaveAndFlush();
             }
         }
     }
@@ -220,6 +218,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 {
                     Plugin.Log?.Error($"[ProcessPriorityManager] Failed to toggle process priority: {ex.Message}");
                 }
+                SaveAndFlush();
             }
         }
     }
@@ -237,6 +236,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.PlayButtonR = (int)(value.r * 255f);
                 PluginConfig.Instance.Colors.PlayButtonG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.PlayButtonB = (int)(value.b * 255f);
+                SaveAndFlush();
             }
         }
     }
@@ -254,6 +254,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.PracticeButtonR = (int)(value.r * 255f);
                 PluginConfig.Instance.Colors.PracticeButtonG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.PracticeButtonB = (int)(value.b * 255f);
+                SaveAndFlush();
             }
         }
     }
@@ -271,6 +272,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.SoloButtonR = (int)(value.r * 255f);
                 PluginConfig.Instance.Colors.SoloButtonG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.SoloButtonB = (int)(value.b * 255f);
+                SaveAndFlush();
             }
         }
     }
@@ -288,6 +290,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.PassBgR = (int)(value.r * 255f);
                 PluginConfig.Instance.Colors.PassBgG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.PassBgB = (int)(value.b * 255f);
+                SaveAndFlush();
             }
         }
     }
@@ -305,6 +308,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 PluginConfig.Instance.Colors.FailBgR = (int)(value.r * 255f);
                 PluginConfig.Instance.Colors.FailBgG = (int)(value.g * 255f);
                 PluginConfig.Instance.Colors.FailBgB = (int)(value.b * 255f);
+                SaveAndFlush();
             }
         }
     }
@@ -398,7 +402,6 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         if (ColorUtility.TryParseHtmlString(preset.ObstacleHex, out var obs) && _presetSettingsObstacle != null)
             _presetSettingsObstacle.CurrentColor = obs;
 
-        Plugin.Log?.Info($"[UI] Opening edit modal for preset '{preset.Name}'. Modal ref null? {_presetSettingsModal == null}");
         _presetSettingsModal?.Show(true);
     }
 
@@ -431,24 +434,10 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
     [UIAction("save-new-preset")]
     void SaveNewPreset()
     {
-        if (string.IsNullOrWhiteSpace(NewPresetName))
-        {
-            Plugin.Log?.Warn("[UI] Save failed: Cannot save a custom preset with an empty name.");
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(NewPresetName)) return;
 
         var presets = PluginConfig.Instance?.QoL?.Presets;
-        if (presets == null)
-        {
-            Plugin.Log?.Error("[UI] Save failed: PluginConfig.Instance.QoL.Presets collection is null!");
-            return;
-        }
-
-        if (presets.Any(p => p.Name == NewPresetName))
-        {
-            Plugin.Log?.Warn($"[UI] Save failed: A preset named '{NewPresetName}' already exists.");
-            return;
-        }
+        if (presets == null || presets.Any(p => p.Name == NewPresetName)) return;
 
         var newPreset = new PluginConfig.CustomPresetData
         {
@@ -463,20 +452,16 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         presets.Add(newPreset);
         if (PluginConfig.Instance?.QoL != null)
         {
-            PluginConfig.Instance.QoL.SelectedPresetName = newPreset.Name;
+            PluginConfig.Instance.QoL.SelectedPresetId = newPreset.Name;
         }
-
-        Plugin.Log?.Info($"[UI] Successfully saved new custom preset '{newPreset.Name}' to config.");
+        
+        SaveAndFlush();
 
         var playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
         var colorSettings = playerDataModel?.playerData?.colorSchemesSettings;
         if (colorSettings != null)
         {
             MoreColorPresetsPatch.InjectCustomPresets(colorSettings);
-        }
-        else
-        {
-            Plugin.Log?.Warn("[UI] PlayerDataModel or colorSchemesSettings not found during new preset injection.");
         }
 
         parserParams?.EmitEvent("hide-create-modal");
@@ -507,8 +492,10 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
 
             if (PluginConfig.Instance?.QoL != null)
             {
-                PluginConfig.Instance.QoL.SelectedPresetName = preset.Name;
+                PluginConfig.Instance.QoL.SelectedPresetId = preset.Name;
             }
+            
+            SaveAndFlush();
 
             var playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
             var colorSettings = playerDataModel?.playerData?.colorSchemesSettings;
@@ -516,18 +503,10 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             {
                 MoreColorPresetsPatch.InjectCustomPresets(colorSettings);
             }
-            else
-            {
-                Plugin.Log?.Warn("[UI] PlayerDataModel or colorSchemesSettings not found during edit preset injection.");
-            }
 
             _presetSettingsModal?.Hide(true);
             RefreshPresetsList();
             NotifyPropertyChanged(nameof(PresetListData));
-        }
-        else
-        {
-            Plugin.Log?.Warn($"[UI] Failed to save preset edit: Could not find original preset '{_editingPresetOriginalName}'.");
         }
     }
 
@@ -542,10 +521,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         PresetListData.Clear();
 
         var presets = PluginConfig.Instance?.QoL?.Presets;
-        if (presets == null)
-        {
-            return;
-        }
+        if (presets == null) return;
 
         foreach (var preset in presets)
         {
@@ -556,15 +532,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             cellData.OnEditSelected += (data) => 
             {
                 var targetPreset = presets.Find(p => p.Name == data.Title);
-                
-                if (targetPreset != null)
-                {
-                    OpenEditor(targetPreset);
-                }
-                else
-                {
-                    Plugin.Log?.Error($"[UI] Error: Could not locate target preset '{data.Title}'.");
-                }
+                if (targetPreset != null) OpenEditor(targetPreset);
             };
 
             cellData.OnDeleteSelected += (data) => 
@@ -575,14 +543,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             PresetListData.Add(cellData);
         }
 
-        if (PresetsList?.TableView != null)
-        {
-            PresetsList.TableView.ReloadData();
-        }
-        else
-        {
-            Plugin.Log?.Warn("[UI] PresetsList TableView reference was null during refresh attempt.");
-        }
+        PresetsList?.TableView?.ReloadData();
     }
 
     private void DeletePresetInternal(PresetCellData cellData)
@@ -590,11 +551,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         if (cellData == null) return;
 
         var presets = PluginConfig.Instance?.QoL?.Presets;
-        if (presets == null)
-        {
-            Plugin.Log?.Error("[UI] Delete failed: Presets list is null.");
-            return;
-        }
+        if (presets == null) return;
 
         var presetToRemove = presets.Find(p => p.Name == cellData.Title);
         if (presetToRemove != null)
@@ -608,20 +565,16 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
                 Features.QoL.MoreColorPresetsPatch.RemoveCustomPreset(colorSettings, cellData.Title);
             }
 
-            if (PluginConfig.Instance?.QoL != null && PluginConfig.Instance.QoL.SelectedPresetName == cellData.Title)
+            if (PluginConfig.Instance?.QoL != null && PluginConfig.Instance.QoL.SelectedPresetId == cellData.Title)
             {
                 var remainingPreset = presets.FirstOrDefault();
-                PluginConfig.Instance.QoL.SelectedPresetName = remainingPreset?.Name ?? "";
+                PluginConfig.Instance.QoL.SelectedPresetId = remainingPreset?.Name ?? "";
             }
-
-            Plugin.Log?.Info($"[UI] Successfully deleted custom preset '{cellData.Title}'.");
+            
+            SaveAndFlush();
             
             RefreshPresetsList();
             NotifyPropertyChanged(nameof(PresetListData));
-        }
-        else
-        {
-            Plugin.Log?.Warn($"[UI] Delete failed: Preset '{cellData.Title}' not found in configuration list.");
         }
     }
 
