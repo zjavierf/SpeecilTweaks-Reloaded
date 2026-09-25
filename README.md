@@ -77,8 +77,6 @@ An expanded set of tweaks and customisations for **Beat Saber**.
   * Customize pass and fail banner background colors.
 
 ### Performance Optimizations
-* **GC Control**: Temporarily disables automatic garbage collection during songs to prevent micro-stutters, with safety cleanup thresholds (>250MB).
-* **Fast Obstacle Optimization**: Dynamic head-wall collision detector to optimize performance on wall-heavy map streams.
 * **Automatic Asset Purge**: Automatically triggers garbage collection and unloads unused assets during menu loading transitions.
 * **Physics Optimization**: Adjusts `fixedDeltaTime` dynamically based on your display refresh rate (FPFC) or headset refresh rate.
 * **Texture Mipmap Optimization**: Forces texture mipmap limits to reduce VRAM consumption.
