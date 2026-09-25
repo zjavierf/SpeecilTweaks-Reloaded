@@ -57,8 +57,6 @@ namespace SpeecilTweaks.Configuration
 
         public class PerformanceSettings
         {
-            public virtual bool EnableGarbageCollectionControl { get; set; } = false;
-            public virtual bool EnableObstacleOptimization { get; set; } = false;
             public virtual bool EnableAssetPurge { get; set; } = false;
             public virtual bool EnablePhysicsOptimization { get; set; } = false;
             public virtual bool EnableTextureOptimization { get; set; } = false;
@@ -67,7 +65,7 @@ namespace SpeecilTweaks.Configuration
 
         public class QualityOfLifeSettings
         {
-            public virtual string SelectedPresetName { get; set; } = "";
+            public virtual string SelectedPresetId { get; set; } = "User0";
 
             [UseConverter(typeof(ListConverter<CustomPresetData>))]
             [NonNullable]
