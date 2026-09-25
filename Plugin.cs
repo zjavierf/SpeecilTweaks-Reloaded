@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Reflection;
 using IPA;
 using IPA.Logging;
 using HarmonyLib;
@@ -16,6 +17,7 @@ namespace SpeecilTweaks
     {
         public static Plugin Instance { get; private set; } = null!;
         public static Logger Log { get; private set; } = null!;
+        public static IPA.Config.Config ConfigStore { get; private set; } = null!;
         private Harmony? _harmony;
 
         [Init]
@@ -23,8 +25,8 @@ namespace SpeecilTweaks
         {
             Instance = this;
             Log = logger;
-
-            // Run sanitization immediately on construct before Zenject or BSAssetLib touch PlayerData.dat
+            ConfigStore = conf;
+            
             SanitizePlayerDataOnDisk();
 
             PluginConfig.Instance = conf.Generated<PluginConfig>();
@@ -38,13 +40,31 @@ namespace SpeecilTweaks
         [OnEnable]
         public void OnEnable()
         {
-            _harmony?.PatchAll();
+            _harmony?.PatchAll(Assembly.GetExecutingAssembly());
         }
 
         [OnDisable]
         public void OnDisable()
         {
             _harmony?.UnpatchSelf();
+        }
+        
+        public static void SaveConfig()
+        {
+            try
+            {
+                if (PluginConfig.Instance != null && ConfigStore != null)
+                {
+                    typeof(IPA.Config.Config).GetMethod("Store")?.MakeGenericMethod(typeof(PluginConfig))
+                        .Invoke(ConfigStore, new object[] { PluginConfig.Instance });
+                }
+                
+                Log?.Info("[SpeecilTweaks] Configuration saved.");
+            }
+            catch (Exception ex)
+            {
+                Log?.Error($"[SpeecilTweaks] Failed to save configuration: {ex.Message}");
+            }
         }
 
         private void SanitizePlayerDataOnDisk()
