@@ -1,4 +1,4 @@
-﻿using Zenject;
+using Zenject;
 using SpeecilTweaks.Configuration;
 using SpeecilTweaks.Features.Performance;
 using SpeecilTweaks.Features.QoL;
@@ -19,7 +19,7 @@ namespace SpeecilTweaks.Features
             {
                 MoreColorPresetsPatch.InjectCustomPresets(colorSettings);
 
-                var selectedName = PluginConfig.Instance?.QoL?.SelectedPresetName;
+                var selectedName = PluginConfig.Instance?.QoL?.SelectedPresetId;
                 var customPresets = PluginConfig.Instance?.QoL?.Presets;
 
                 if (!string.IsNullOrEmpty(selectedName))
@@ -47,7 +47,7 @@ namespace SpeecilTweaks.Features
             
             SpeecilPerformanceManager.ApplyAllOptimizations();
             
-            if (config.EnableAssetPurge || config.EnableGarbageCollectionControl)
+            if (config.EnableAssetPurge)
             {
                 SpeecilPerformanceManager.Init();
             }
