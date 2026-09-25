@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.XR;
 using SpeecilTweaks.Configuration;
 
@@ -12,8 +11,6 @@ namespace SpeecilTweaks.Features.Performance
     public class SpeecilPerformanceManager : MonoBehaviour
     {
         private static SpeecilPerformanceManager? _instance;
-        private static long _initialMemoryBeforeSong;
-        private const long GCMemoryThresholdBytes = 250L * 1024L * 1024L; 
         private static bool _lastKnownXrState = true;
 
         public static void Init()
@@ -114,32 +111,6 @@ namespace SpeecilTweaks.Features.Performance
             }
         }
 
-        public static void SetGameStarted(bool started)
-        {
-            var config = PluginConfig.Instance?.Performance;
-            if (config?.EnableGarbageCollectionControl != true) return;
-
-            try
-            {
-                if (started)
-                {
-                    _initialMemoryBeforeSong = GC.GetTotalMemory(false);
-                    GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
-                    Plugin.Log?.Info("[PerformanceManager] Garbage collection disabled for song performance.");
-                }
-                else
-                {
-                    GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
-                    GC.Collect();
-                    Plugin.Log?.Info("[PerformanceManager] Garbage collection re-enabled and executed.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log?.Error($"[PerformanceManager] Failed to toggle GC mode: {ex.Message}");
-            }
-        }
-
         private IEnumerator MonitorPerformanceRoutine()
         {
             var wait = new WaitForSecondsRealtime(5f);
@@ -156,31 +127,6 @@ namespace SpeecilTweaks.Features.Performance
                     _lastKnownXrState = currentXrState;
                     Plugin.Log?.Info($"[PerformanceManager] XR Loader state changed (FPFC active: {!currentXrState}). Refreshing physics rate...");
                     ApplyPhysicsOptimization(config.EnablePhysicsOptimization);
-                }
-                
-                if (config.EnableGarbageCollectionControl && GarbageCollector.GCMode == GarbageCollector.Mode.Disabled)
-                {
-                    try
-                    {
-                        if (AudioListener.pause || Time.timeScale == 0f)
-                        {
-                            continue;
-                        }
-
-                        long currentMemory = GC.GetTotalMemory(false);
-                        if (currentMemory - _initialMemoryBeforeSong > GCMemoryThresholdBytes)
-                        {
-                            Plugin.Log?.Warn($"[PerformanceManager] Memory allocation threshold reached (>250MB allocated during song). Triggering safe GC pass.");
-                            GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
-                            GC.Collect();
-                            _initialMemoryBeforeSong = GC.GetTotalMemory(false);
-                            GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Plugin.Log?.Error($"[PerformanceManager] Error during GC safety check: {ex.Message}");
-                    }
                 }
             }
         }
