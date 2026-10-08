@@ -95,6 +95,9 @@
 						<action-button text="+ Create New Preset" on-click="open-create-preset-modal" scale="0.6"/>
 						<text text="Saved Custom Presets" align="Center" font-size="4" bold="true"/>
 
+						<horizontal><text text=" " font-size="2" color="#00000000"/></horizontal>
+						<horizontal><text text=" " font-size="2" color="#00000000"/></horizontal>
+
 						<!-- Custom List corrected to use 'contents' -->
 						<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" pref-height="25" pref-width="50">
 							<custom-list id="presets-list" contents="preset-list-data" list-height="6" list-width="95">
