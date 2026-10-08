@@ -30,16 +30,20 @@ An expanded set of tweaks and customisations for **Beat Saber**.
 
 ---
 
+<img width="526" height="324" alt="image" src="https://github.com/user-attachments/assets/55b68763-a58b-4760-b6cd-51437fb19cf9" />
+
+
+
 ### Color Preset Manager
 
 **Color Preset Overview**
-<img width="800" alt="colorPresetTab" src="https://github.com/user-attachments/assets/b46f087d-418a-4082-814a-5cf5c9db2623" />
+<img width="800" alt="colorPresetTab" src="https://github.com/user-attachments/assets/1afa6761-437a-45bd-a15a-6bfd4d176f4a" />
 
 **Preset Dropdown**
 <img width="800" alt="colorPresetDropdown" src="https://github.com/user-attachments/assets/02bb3d48-9b07-48d6-a262-2b59839fcd3e" />
 
 **Preset Editor**
-<img width="800" alt="colorPresetEdit" src="https://github.com/user-attachments/assets/650cd01b-b466-48c6-9ec0-965c32135330" />
+<img width="800" alt="colorPresetEdit" src="https://github.com/user-attachments/assets/55b68763-a58b-4760-b6cd-51437fb19cf9" />
 
 **Custom Colors Active**
 <img width="800" alt="colorPreset" src="https://github.com/user-attachments/assets/10d2cbf0-2b2e-4e04-8054-1d349f811078" />
