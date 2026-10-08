@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using IPA.Utilities.Async;
 using SpeecilTweaks.Configuration;
 using TMPro;
@@ -104,6 +104,7 @@ namespace SpeecilTweaks.Features.MenuTweaks
             int layerCount = 12;
             float depthStep = 0.12f;
 
+            // Use Unity's overloaded null check to safely recreate if destroyed by environment switching
             if (_spawnedLogoTextObj == null)
             {
                 var originalLogo = defaultEnv.Find("Logo");
@@ -112,7 +113,7 @@ namespace SpeecilTweaks.Features.MenuTweaks
 
                 _spawnedLogoTextObj = new GameObject("Speecil_CustomMenuLogoText_CachedStack");
                 _spawnedLogoTextObj.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-                _spawnedLogoTextObj.transform.localScale = Vector3.one * 1.0f;
+                _spawnedLogoTextObj.transform.localScale = Vector3.one;
                 _spawnedLogoTextObj.transform.SetParent(defaultEnv, true);
             }
             
@@ -157,7 +158,11 @@ namespace SpeecilTweaks.Features.MenuTweaks
                     else
                     {
                         float shade = Mathf.Lerp(0.05f, 0.45f, (float)i / layerCount);
-                        textMesh.color = new Color(mainColor.r * 0.08f, mainColor.g * shade, mainColor.b * 0.08f);
+                        textMesh.color = new Color(
+                            Mathf.Clamp01(mainColor.r - 0.08f), 
+                            Mathf.Clamp01(mainColor.g * shade), 
+                            Mathf.Clamp01(mainColor.b - 0.08f)
+                        );
                         textMesh.outlineWidth = 0f;
                     }
                 }
