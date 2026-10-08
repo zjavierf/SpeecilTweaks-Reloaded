@@ -68,7 +68,7 @@
 		<tab tab-name="Gameplay" tags="tabs">
 			<tab-selector tab-tag="tabs2"/>
 			<horizontal preferred-width="110" preferred-height="55" anchor-pos-y="-3">
-				
+
 				<tab tab-name="Performance" tags="tabs2">
 					<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="2">
 						<scroll-view spacing="1" pref-height="50" child-expand-width="true">
@@ -88,13 +88,16 @@
 			<horizontal preferred-width="110" preferred-height="55" anchor-pos-y="-3">
 
 				<tab tab-name="Color Presets" tags="tabs3">
-					<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" preferred-width="60" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="3" spacing="2">
-						<action-button text="+ Create New Preset" on-click="open-create-preset-modal"/>
+					<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" preferred-width="60" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="3">
+						<toggle-setting scale="0.8" text="Use Preferred Environment Colour" value="use-preferred-env-color" hover-hint="Automatically use the global environment colour for custom presets" apply-on-change="true"/>
+						<color-setting scale="0.8" value="preferred-env-color" text="Preferred Colour" apply-on-change="true"/>
+
+						<action-button text="+ Create New Preset" on-click="open-create-preset-modal" scale="0.6"/>
 						<text text="Saved Custom Presets" align="Center" font-size="4" bold="true"/>
 
 						<!-- Custom List corrected to use 'contents' -->
-						<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" pref-height="35" pref-width="50">
-							<custom-list id="presets-list" contents="preset-list-data" list-height="7.5" list-width="95">
+						<vertical vertical-fit="PreferredSize" horizontal-fit="PreferredSize" pref-height="25" pref-width="50">
+							<custom-list id="presets-list" contents="preset-list-data" list-height="6" list-width="95">
 								<horizontal horizontal-fit="Unconstrained" vertical-fit="Unconstrained" pad-left="2" pad-right="2">
 									<vertical child-align="MiddleCenter" horizontal-fit="Unconstrained">
 										<text text="~preset-title" font-size="4" bold="true" align="Left"/>
@@ -110,15 +113,22 @@
 				</tab>
 			</horizontal>
 		</tab>
+
 		<!-- Tab 4: Other Mods -->
 		<tab tab-name="Other Mods" tags="tabs">
-			<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="4" child-align="MiddleCenter" spacing="3">
-				<text color="aqua" text="FCSplash Mod" font-align="Center" font-size="7"/>
-				<action-button on-click="FCSplashRepo" text="Link to FCSplash Mod"/>
-				<text color="aqua" text="WeatherModReloaded" font-align="Center" font-size="7"/>
-				<action-button on-click="WeatherModRepo" text="Link to WeatherModReloaded"/>
-				<text text="Message zjavierf on discord for any feature requests or bugs!" outline-color="black" outline-width="3" font-size="3" align="Center" word-wrapping="true"/>
-			</vertical>
+			<scroll-view spacing="1" pref-height="50" child-expand-width="true">
+				<vertical vertical-fit="PreferredSize" pref-height="52" pref-width="110" bg="round-rect-panel" bg-alpha="0.8" pad="4" child-align="MiddleCenter" spacing="0">
+					<text color="aqua" text="FCSplash Mod" font-align="Center" font-size="4"/>
+					<action-button on-click="FCSplashRepo" text="Link to FCSplash Mod" scale="0.8"/>
+
+					<text color="aqua" text="WeatherModReloaded" font-align="Center" font-size="4"/>
+					<action-button on-click="WeatherModRepo" text="Link to WeatherModReloaded" scale="0.8"/>
+
+					<text color="aqua" text="MapInfoCounter Mod" font-align="Center" font-size="4"/>
+					<action-button on-click="MapInfoCounterRepo" text="Link to Map Info Counter Mod" scale="0.8"/>
+					<text text="Message zjavierf on discord for any feature requests or bugs!" outline-color="black" outline-width="3" font-size="3" align="Center" word-wrapping="true"/>
+				</vertical>
+			</scroll-view>
 		</tab>
 
 	</horizontal>
@@ -131,8 +141,7 @@
 			<string-setting text="Preset Name" value="new-preset-name" apply-on-change="true"/>
 			<color-setting text="Left Saber" value="new-saber-left" apply-on-change="true"/>
 			<color-setting text="Right Saber" value="new-saber-right" apply-on-change="true"/>
-			<color-setting text="Environment Left" value="new-env-left" apply-on-change="true"/>
-			<color-setting text="Environment Right" value="new-env-right" apply-on-change="true"/>
+			<color-setting id="create-preset-env" text="Environment" value="new-env" apply-on-change="true"/>
 			<color-setting text="Obstacle" value="new-obstacle" apply-on-change="true"/>
 
 			<horizontal spacing="4" pad-top="2">
@@ -147,12 +156,11 @@
 		<vertical pad="4" spacing="1">
 			<text text="Edit Custom Color Preset" align="Center" font-size="5" bold="true"/>
 
-			<string-setting id="preset-settings-name" text="Preset Name" apply-on-change="false"/>
-			<color-setting id="preset-settings-saber-left" text="Left Saber" apply-on-change="false"/>
-			<color-setting id="preset-settings-saber-right" text="Right Saber" apply-on-change="false"/>
-			<color-setting id="preset-settings-env-left" text="Environment Left" apply-on-change="false"/>
-			<color-setting id="preset-settings-env-right" text="Environment Right" apply-on-change="false"/>
-			<color-setting id="preset-settings-obstacle" text="Obstacle" apply-on-change="false"/>
+			<string-setting id="preset-settings-name" text="Preset Name" apply-on-change="true"/>
+			<color-setting id="preset-settings-saber-left" text="Left Saber" apply-on-change="true"/>
+			<color-setting id="preset-settings-saber-right" text="Right Saber" apply-on-change="true"/>
+			<color-setting id="preset-settings-env" text="Environment" apply-on-change="true"/>
+			<color-setting id="preset-settings-obstacle" text="Obstacle" apply-on-change="true"/>
 
 			<horizontal spacing="4" pad-top="2">
 				<action-button text="Save Changes" on-click="save-edited-preset"/>
