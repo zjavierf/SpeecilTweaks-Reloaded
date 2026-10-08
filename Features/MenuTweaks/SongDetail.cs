@@ -7,76 +7,71 @@ namespace SpeecilTweaks.Features.MenuTweaks
 {
     internal static class SongDetailsHelper
     {
-        public static void ApplyTweaksToView(Transform viewTransform)
+        public static void ApplyTweaks(Button actionButton, Button practiceButton)
         {
-            if (viewTransform == null) return;
-
-            var buttons = viewTransform.GetComponentsInChildren<Button>(true);
-            foreach (var button in buttons)
+            if (actionButton != null)
             {
-                if (button == null) continue;
-
-                var textComp = button.GetComponentInChildren<HMUI.CurvedTextMeshPro>(true);
-                if (textComp == null) continue;
-
-                string currentText = textComp.text?.Trim().ToUpperInvariant() ?? "";
-
-                if (currentText == "PLAY" || currentText == "SG" || button.name.Contains("Action") || button.name.Contains("Play"))
+                var textComp = actionButton.GetComponentInChildren<HMUI.CurvedTextMeshPro>(true);
+                if (textComp != null)
                 {
-                    var color = new Color32(
+                    textComp.SetText(PluginConfig.Instance.Text.PlayText);
+                    var targetColor = new Color32(
                         (byte)PluginConfig.Instance.Colors.PlayButtonR, 
                         (byte)PluginConfig.Instance.Colors.PlayButtonG, 
                         (byte)PluginConfig.Instance.Colors.PlayButtonB, 
                         255
                     );
-                    ApplyButtonTweaks(button, PluginConfig.Instance.Text.PlayText, color);
+                    textComp.color = targetColor;
+
+                    var watcher = actionButton.GetComponent<ButtonColorEnforcer>();
+                    if (watcher == null) watcher = actionButton.gameObject.AddComponent<ButtonColorEnforcer>();
+                    watcher.TargetColor = targetColor;
+                    watcher.TargetText = textComp;
+                    watcher.enabled = true;
                 }
-                else if (currentText == "PRACTICE" || button.name.Contains("Practice"))
+
+                // Instead of destroying components (which breaks layout bindings), 
+                // safely disable any custom text/color transition scripts found on the button.
+                foreach (var comp in actionButton.GetComponentsInChildren<MonoBehaviour>(true))
                 {
-                    var color = new Color32(
+                    if (comp == null) continue;
+                    string typeName = comp.GetType().Name;
+                    if (typeName.Contains("TextTransition") || typeName.Contains("ColorTransition"))
+                    {
+                        comp.enabled = false;
+                    }
+                }
+            }
+
+            if (practiceButton != null)
+            {
+                var textComp = practiceButton.GetComponentInChildren<HMUI.CurvedTextMeshPro>(true);
+                if (textComp != null)
+                {
+                    textComp.SetText(PluginConfig.Instance.Text.PracticeText);
+                    var targetColor = new Color32(
                         (byte)PluginConfig.Instance.Colors.PracticeButtonR, 
                         (byte)PluginConfig.Instance.Colors.PracticeButtonG, 
                         (byte)PluginConfig.Instance.Colors.PracticeButtonB, 
                         255
                     );
-                    ApplyButtonTweaks(button, PluginConfig.Instance.Text.PracticeText, color);
-                }
-            }
-        }
+                    textComp.color = targetColor;
 
-        private static void ApplyButtonTweaks(Button button, string customText, Color targetColor)
-        {
-            if (button == null) return;
-
-            var textComp = button.GetComponentInChildren<HMUI.CurvedTextMeshPro>(true);
-            if (textComp != null)
-            {
-                textComp.SetText(customText);
-                
-                textComp.enableVertexGradient = false;
-                textComp.color = targetColor;
-                
-                if (textComp.fontMaterial != null)
-                {
-                    textComp.fontMaterial.SetColor("_FaceColor", targetColor);
+                    var watcher = practiceButton.GetComponent<ButtonColorEnforcer>();
+                    if (watcher == null) watcher = practiceButton.gameObject.AddComponent<ButtonColorEnforcer>();
+                    watcher.TargetColor = targetColor;
+                    watcher.TargetText = textComp;
+                    watcher.enabled = true;
                 }
 
-                textComp.SetAllDirty();
-            }
-            
-            foreach (var comp in button.GetComponentsInChildren<Component>(true))
-            {
-                if (comp == null) continue;
-                string typeName = comp.GetType().Name;
-                if (typeName.Contains("TextTransition") || 
-                    typeName.Contains("ColorTransition") || 
-                    typeName.Contains("GraphicTransition") ||
-                    typeName.Contains("StateTransition") ||
-                    typeName.Contains("Localize") ||
-                    typeName.Contains("ButtonSpriteSwap") ||
-                    typeName.Contains("ToggleBinder"))
+                foreach (var comp in practiceButton.GetComponentsInChildren<MonoBehaviour>(true))
                 {
-                    Object.Destroy(comp);
+                    if (comp == null) continue;
+                    string typeName = comp.GetType().Name;
+                    if (typeName.Contains("TextTransition") || typeName.Contains("ColorTransition"))
+                    {
+                        comp.enabled = false;
+                    }
                 }
             }
         }
@@ -85,10 +80,9 @@ namespace SpeecilTweaks.Features.MenuTweaks
     [HarmonyPatch(typeof(StandardLevelDetailView), "RefreshContent")]
     public static class StandardLevelDetailViewRefreshContent
     {
-        static void Postfix(StandardLevelDetailView __instance)
+        static void Postfix(ref Button ____actionButton, ref Button ____practiceButton)
         {
-            if (__instance != null)
-                SongDetailsHelper.ApplyTweaksToView(__instance.transform);
+            SongDetailsHelper.ApplyTweaks(____actionButton, ____practiceButton);
         }
     }
 
@@ -97,18 +91,53 @@ namespace SpeecilTweaks.Features.MenuTweaks
     {
         static void Postfix(StandardLevelDetailViewController __instance)
         {
-            if (__instance != null)
-                SongDetailsHelper.ApplyTweaksToView(__instance.transform);
+            var detailView = Traverse.Create(__instance).Field("_standardLevelDetailView").GetValue<StandardLevelDetailView>();
+            if (detailView != null)
+            {
+                var actionButton = Traverse.Create(detailView).Field("_actionButton").GetValue<Button>();
+                var practiceButton = Traverse.Create(detailView).Field("_practiceButton").GetValue<Button>();
+                SongDetailsHelper.ApplyTweaks(actionButton, practiceButton);
+            }
         }
     }
 
-    [HarmonyPatch(typeof(StandardLevelDetailView), "SetData")]
-    public static class StandardLevelDetailViewSetData
+    [HarmonyPatch(typeof(StandardLevelDetailViewController), "DidDeactivate")]
+    public static class StandardLevelDetailViewControllerDidDeactivate
     {
-        static void Postfix(StandardLevelDetailView __instance)
+        static void Prefix(StandardLevelDetailViewController __instance)
         {
-            if (__instance != null)
-                SongDetailsHelper.ApplyTweaksToView(__instance.transform);
+            var detailView = Traverse.Create(__instance).Field("_standardLevelDetailView").GetValue<StandardLevelDetailView>();
+            if (detailView != null)
+            {
+                var actionButton = Traverse.Create(detailView).Field("_actionButton").GetValue<Button>();
+                var practiceButton = Traverse.Create(detailView).Field("_practiceButton").GetValue<Button>();
+
+                if (actionButton != null)
+                {
+                    var watcher = actionButton.GetComponent<ButtonColorEnforcer>();
+                    if (watcher != null) watcher.enabled = false;
+                }
+
+                if (practiceButton != null)
+                {
+                    var watcher = practiceButton.GetComponent<ButtonColorEnforcer>();
+                    if (watcher != null) watcher.enabled = false;
+                }
+            }
+        }
+    }
+
+    public class ButtonColorEnforcer : MonoBehaviour
+    {
+        public Color TargetColor;
+        public HMUI.CurvedTextMeshPro? TargetText;
+
+        private void Update()
+        {
+            if (TargetText != null && TargetText.color != TargetColor)
+            {
+                TargetText.color = TargetColor;
+            }
         }
     }
 }
