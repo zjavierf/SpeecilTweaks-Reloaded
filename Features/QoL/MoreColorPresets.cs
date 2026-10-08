@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -31,13 +31,13 @@ namespace SpeecilTweaks.Features.QoL
             if (colorSettings == null) return;
 
             string selectedId = colorSettings.selectedColorSchemeId;
-            if (!string.IsNullOrEmpty(selectedId) && selectedId.StartsWith("Speecil_"))
+            if (!string.IsNullOrEmpty(selectedId))
             {
-                string cleanName = selectedId.Substring("Speecil_".Length);
                 if (PluginConfig.Instance?.QoL != null)
                 {
-                    PluginConfig.Instance.QoL.SelectedPresetName = cleanName;
-                    Plugin.Log?.Info($"[MoreColorPresets] User selected custom scheme '{cleanName}'. Saved to config.");
+                    PluginConfig.Instance.QoL.SelectedPresetId = selectedId;
+                    Plugin.SaveConfig();
+                    Plugin.Log?.Info($"[MoreColorPresets] User selected color scheme ID '{selectedId}'. Saved to config.");
                 }
             }
         }
@@ -95,41 +95,67 @@ namespace SpeecilTweaks.Features.QoL
             {
                 if (preset == null || string.IsNullOrEmpty(preset.Name)) continue;
 
+                string envColorHex = preset.EnvHex;
+                if (PluginConfig.Instance?.QoL?.UsePreferredEnvColor == true && !string.IsNullOrEmpty(PluginConfig.Instance.QoL.PreferredEnvHex))
+                {
+                    envColorHex = PluginConfig.Instance.QoL.PreferredEnvHex;
+                }
+
                 if (!ColorUtility.TryParseHtmlString(preset.SaberLeftHex, out Color saberLeft) ||
                     !ColorUtility.TryParseHtmlString(preset.SaberRightHex, out Color saberRight) ||
-                    !ColorUtility.TryParseHtmlString(preset.EnvLeftHex, out Color envLeft) ||
-                    !ColorUtility.TryParseHtmlString(preset.EnvRightHex, out Color envRight) ||
+                    !ColorUtility.TryParseHtmlString(envColorHex, out Color envColor) ||
                     !ColorUtility.TryParseHtmlString(preset.ObstacleHex, out Color obstacle))
                 {
                     continue;
                 }
 
                 string targetId = $"Speecil_{preset.Name}";
-                if (customSchemesList.Exists(s => s != null && s.colorSchemeId == targetId)) continue;
-
+                
+                customSchemesList.RemoveAll(s => s != null && s.colorSchemeId == targetId);
+                if (colorSchemesDict != null && colorSchemesDict.Contains(targetId))
+                {
+                    colorSchemesDict.Remove(targetId);
+                }
+                
                 ColorScheme scheme = new ColorScheme(
                     targetId, preset.Name, true, preset.Name, false, true,
-                    saberLeft, saberRight, true, envLeft, envRight, envLeft,
-                    true, envLeft, envRight, envLeft, obstacle
+                    saberLeft, saberRight, true, envColor, envColor, envColor,
+                    true, envColor, envColor, envColor, obstacle
                 );
 
                 customSchemesList.Insert(insertIndex + injectedCount, scheme);
 
                 if (colorSchemesDict != null)
                 {
-                    if (!colorSchemesDict.Contains(targetId))
-                    {
-                        colorSchemesDict.Add(targetId, scheme);
-                    }
-                    else
-                    {
-                        colorSchemesDict[targetId] = scheme; // Safely update existing key
-                    }
+                    colorSchemesDict.Add(targetId, scheme);
                 }
 
                 injectedCount++;
             }
-            Plugin.Log?.Info($"[MoreColorPresets] Injected {injectedCount} custom scheme(s) cleanly.");
+
+            if (PluginConfig.Instance?.QoL != null && !string.IsNullOrEmpty(PluginConfig.Instance.QoL.SelectedPresetId))
+            {
+                string savedId = PluginConfig.Instance.QoL.SelectedPresetId;
+                if (colorSchemesDict == null || colorSchemesDict.Contains(savedId))
+                {
+                    colorSchemesSettings.selectedColorSchemeId = savedId;
+                }
+            }
+        }
+
+        public static void RefreshActiveSettingsPanel()
+        {
+            var panelController = UnityEngine.Object.FindObjectOfType<ColorsOverrideSettingsPanelController>();
+            if (panelController != null)
+            {
+                var playerDataModel = UnityEngine.Object.FindObjectOfType<PlayerDataModel>();
+                if (playerDataModel?.playerData?.colorSchemesSettings != null)
+                {
+                    var colorSettings = playerDataModel.playerData.colorSchemesSettings;
+                    InjectCustomPresets(colorSettings);
+                    panelController.SetData(colorSettings);
+                }
+            }
         }
 
         public static void RemoveCustomPreset(ColorSchemesSettings colorSchemesSettings, string presetName)
