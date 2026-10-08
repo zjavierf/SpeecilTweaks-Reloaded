@@ -20,6 +20,9 @@ namespace SpeecilTweaks.UI;
 public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotifyPropertyChanged
 {
     public new event PropertyChangedEventHandler? PropertyChanged;
+    
+    [UIComponent("create-preset-env")]
+    private readonly ColorSetting _createPresetEnv = null!;
 
     [UIParams]
     private BSMLParserParams parserParams = null!;
@@ -37,18 +40,14 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
     [UIComponent("preset-settings-saber-right")]
     private readonly ColorSetting _presetSettingsSaberRight = null!;
 
-    [UIComponent("preset-settings-env-left")]
-    private readonly ColorSetting _presetSettingsEnvLeft = null!;
-
-    [UIComponent("preset-settings-env-right")]
-    private readonly ColorSetting _presetSettingsEnvRight = null!;
+    [UIComponent("preset-settings-env")]
+    private readonly ColorSetting _presetSettingsEnv = null!;
 
     [UIComponent("preset-settings-obstacle")]
     private readonly ColorSetting _presetSettingsObstacle = null!;
 
     private string _editingPresetOriginalName = string.Empty;
 
-    // Helper method to keep things DRY and instant
     private void SaveAndFlush()
     {
         Plugin.SaveConfig();
@@ -313,6 +312,37 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         }
     }
 
+    // --- PREFERRED ENV SETTINGS ---
+    [UIValue("use-preferred-env-color")]
+    public bool UsePreferredEnvColor
+    {
+        get => PluginConfig.Instance?.QoL?.UsePreferredEnvColor ?? false;
+        set
+        {
+            if (PluginConfig.Instance?.QoL != null)
+            {
+                PluginConfig.Instance.QoL.UsePreferredEnvColor = value;
+                SaveAndFlush();
+                MoreColorPresetsPatch.RefreshActiveSettingsPanel();
+            }
+        }
+    }
+
+    [UIValue("preferred-env-color")]
+    public Color PreferredEnvColor
+    {
+        get => PluginConfig.Instance?.QoL != null && ColorUtility.TryParseHtmlString(PluginConfig.Instance.QoL.PreferredEnvHex, out var col) ? col : Color.red;
+        set
+        {
+            if (PluginConfig.Instance?.QoL != null)
+            {
+                PluginConfig.Instance.QoL.PreferredEnvHex = "#" + ColorUtility.ToHtmlStringRGB(value);
+                SaveAndFlush();
+                MoreColorPresetsPatch.RefreshActiveSettingsPanel();
+            }
+        }
+    }
+
     // --- CREATE MODAL STATE ---
     [UIValue("new-preset-name")]
     public string NewPresetName { get; set; } = "My Custom Scheme";
@@ -323,18 +353,15 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
     [UIValue("new-saber-right")]
     public Color NewSaberRight { get; set; } = Color.blue;
 
-    [UIValue("new-env-left")]
-    public Color NewEnvLeft { get; set; } = Color.red;
-
-    [UIValue("new-env-right")]
-    public Color NewEnvRight { get; set; } = Color.blue;
+    [UIValue("new-env")]
+    public Color NewEnv { get; set; } = Color.red;
 
     [UIValue("new-obstacle")]
     public Color NewObstacle { get; set; } = Color.red;
 
     [UIValue("preset-list-data")]
-    public List<PresetCellData> PresetListData { get; set; } = new();
-
+    public List<PresetCellData> PresetListData { get; set; } = new List<PresetCellData>();
+    
     [UIComponent("presets-list")]
     public CustomCellListTableData PresetsList = null!;
 
@@ -375,6 +402,10 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
     [UIAction("#post-parse")]
     void PostParse()
     {
+        if (PresetListData == null)
+        {
+            PresetListData = new List<PresetCellData>();
+        }
         RefreshPresetsList();
     }
 
@@ -393,11 +424,8 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         if (ColorUtility.TryParseHtmlString(preset.SaberRightHex, out var sRight) && _presetSettingsSaberRight != null)
             _presetSettingsSaberRight.CurrentColor = sRight;
 
-        if (ColorUtility.TryParseHtmlString(preset.EnvLeftHex, out var eLeft) && _presetSettingsEnvLeft != null)
-            _presetSettingsEnvLeft.CurrentColor = eLeft;
-
-        if (ColorUtility.TryParseHtmlString(preset.EnvRightHex, out var eRight) && _presetSettingsEnvRight != null)
-            _presetSettingsEnvRight.CurrentColor = eRight;
+        if (ColorUtility.TryParseHtmlString(preset.EnvHex, out var env) && _presetSettingsEnv != null)
+            _presetSettingsEnv.CurrentColor = env;
 
         if (ColorUtility.TryParseHtmlString(preset.ObstacleHex, out var obs) && _presetSettingsObstacle != null)
             _presetSettingsObstacle.CurrentColor = obs;
@@ -411,17 +439,31 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         NewPresetName = "My Custom Scheme";
         NewSaberLeft = Color.red;
         NewSaberRight = Color.blue;
-        NewEnvLeft = Color.red;
-        NewEnvRight = Color.blue;
         NewObstacle = Color.red;
+
+        if (PluginConfig.Instance?.QoL?.UsePreferredEnvColor == true && 
+            !string.IsNullOrEmpty(PluginConfig.Instance.QoL.PreferredEnvHex) && 
+            ColorUtility.TryParseHtmlString(PluginConfig.Instance.QoL.PreferredEnvHex, out var parsedColor))
+        {
+            NewEnv = parsedColor;
+        }
+        else
+        {
+            NewEnv = Color.red;
+        }
+
+        // Explicitly update the BSML color-setting component's visual state
+        if (_createPresetEnv != null)
+        {
+            _createPresetEnv.CurrentColor = NewEnv;
+        }
 
         NotifyPropertyChanged(nameof(NewPresetName));
         NotifyPropertyChanged(nameof(NewSaberLeft));
         NotifyPropertyChanged(nameof(NewSaberRight));
-        NotifyPropertyChanged(nameof(NewEnvLeft));
-        NotifyPropertyChanged(nameof(NewEnvRight));
+        NotifyPropertyChanged(nameof(NewEnv));
         NotifyPropertyChanged(nameof(NewObstacle));
-    
+
         parserParams?.EmitEvent("show-create-modal");
     }
 
@@ -444,25 +486,19 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
             Name = NewPresetName,
             SaberLeftHex = "#" + ColorUtility.ToHtmlStringRGB(NewSaberLeft),
             SaberRightHex = "#" + ColorUtility.ToHtmlStringRGB(NewSaberRight),
-            EnvLeftHex = "#" + ColorUtility.ToHtmlStringRGB(NewEnvLeft),
-            EnvRightHex = "#" + ColorUtility.ToHtmlStringRGB(NewEnvRight),
+            EnvHex = "#" + ColorUtility.ToHtmlStringRGB(NewEnv),
             ObstacleHex = "#" + ColorUtility.ToHtmlStringRGB(NewObstacle)
         };
 
         presets.Add(newPreset);
         if (PluginConfig.Instance?.QoL != null)
         {
-            PluginConfig.Instance.QoL.SelectedPresetId = newPreset.Name;
+            PluginConfig.Instance.QoL.SelectedPresetId = $"Speecil_{newPreset.Name}";
         }
         
         SaveAndFlush();
 
-        var playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
-        var colorSettings = playerDataModel?.playerData?.colorSchemesSettings;
-        if (colorSettings != null)
-        {
-            MoreColorPresetsPatch.InjectCustomPresets(colorSettings);
-        }
+        MoreColorPresetsPatch.RefreshActiveSettingsPanel();
 
         parserParams?.EmitEvent("hide-create-modal");
         RefreshPresetsList();
@@ -477,32 +513,39 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
 
         if (preset != null)
         {
-            preset.Name = _presetSettingsName != null ? _presetSettingsName.Text : _editingPresetOriginalName;
+            string newName = _presetSettingsName != null ? _presetSettingsName.Text : _editingPresetOriginalName;
+            
+            if (newName != _editingPresetOriginalName)
+            {
+                var playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
+                var colorSettings = playerDataModel?.playerData?.colorSchemesSettings;
+                if (colorSettings != null)
+                {
+                    MoreColorPresetsPatch.RemoveCustomPreset(colorSettings, _editingPresetOriginalName);
+                }
+            }
+
+            preset.Name = newName;
             
             if (_presetSettingsSaberLeft != null)
                 preset.SaberLeftHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsSaberLeft.CurrentColor);
             if (_presetSettingsSaberRight != null)
                 preset.SaberRightHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsSaberRight.CurrentColor);
-            if (_presetSettingsEnvLeft != null)
-                preset.EnvLeftHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsEnvLeft.CurrentColor);
-            if (_presetSettingsEnvRight != null)
-                preset.EnvRightHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsEnvRight.CurrentColor);
+            if (_presetSettingsEnv != null)
+                preset.EnvHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsEnv.CurrentColor);
             if (_presetSettingsObstacle != null)
                 preset.ObstacleHex = "#" + ColorUtility.ToHtmlStringRGB(_presetSettingsObstacle.CurrentColor);
 
             if (PluginConfig.Instance?.QoL != null)
             {
-                PluginConfig.Instance.QoL.SelectedPresetId = preset.Name;
+                PluginConfig.Instance.QoL.SelectedPresetId = $"Speecil_{preset.Name}";
             }
             
             SaveAndFlush();
 
-            var playerDataModel = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
-            var colorSettings = playerDataModel?.playerData?.colorSchemesSettings;
-            if (colorSettings != null)
-            {
-                MoreColorPresetsPatch.InjectCustomPresets(colorSettings);
-            }
+            MoreColorPresetsPatch.RefreshActiveSettingsPanel();
+            
+            _editingPresetOriginalName = preset.Name;
 
             _presetSettingsModal?.Hide(true);
             RefreshPresetsList();
@@ -516,7 +559,7 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
         _presetSettingsModal?.Hide(true);
     }
 
-    private void RefreshPresetsList()
+    public void RefreshPresetsList()
     {
         PresetListData.Clear();
 
@@ -590,8 +633,11 @@ public class SpeecilSettingsViewController : BSMLAutomaticViewController, INotif
     void OpenGitHub() => System.Diagnostics.Process.Start("https://github.com/zjavierf/SpeecilTweaks-Reloaded");
     
     [UIAction("FCSplashRepo")]
-    void OpenFcSplashRepo() => System.Diagnostics.Process.Start("https://github.com/unknownjwly/BS_FCSplash");
+    void OpenFcSplashRepo() => System.Diagnostics.Process.Start("https://github.com/zjavierf/BS_FCSplash");
     
     [UIAction("WeatherModRepo")]
     void OpenWeatherModRepo() => System.Diagnostics.Process.Start("https://github.com/zjavierf/Beat-Saber-WeatherReloaded");
+    
+    [UIAction("MapInfoCounterRepo")]
+    void OpenMapInfoCounterRepo() => System.Diagnostics.Process.Start("https://github.com/zjavierf/MapInfoCounter");
 }
