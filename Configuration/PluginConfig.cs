@@ -66,6 +66,8 @@ namespace SpeecilTweaks.Configuration
         public class QualityOfLifeSettings
         {
             public virtual string SelectedPresetId { get; set; } = "User0";
+            public virtual bool UsePreferredEnvColor { get; set; } = false;
+            public virtual string PreferredEnvHex { get; set; } = "#FF0000";
 
             [UseConverter(typeof(ListConverter<CustomPresetData>))]
             [NonNullable]
@@ -78,8 +80,7 @@ namespace SpeecilTweaks.Configuration
             public virtual string Name { get; set; } = "Custom Scheme";
             public virtual string SaberLeftHex { get; set; } = "#FF0000";
             public virtual string SaberRightHex { get; set; } = "#0000FF";
-            public virtual string EnvLeftHex { get; set; } = "#FF0000";
-            public virtual string EnvRightHex { get; set; } = "#0000FF";
+            public virtual string EnvHex { get; set; } = "#FF0000";
             public virtual string ObstacleHex { get; set; } = "#FF0000";
         }
 
